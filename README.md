@@ -1,6 +1,4 @@
 # PHP_Laravel12_SEO_Tools
-# Laravel SEO Tools Project
-
 ## Overview
 
 Laravel SEO Tools Project is a comprehensive SEO management system built with Laravel 12.
