@@ -5,6 +5,7 @@ use App\Http\Controllers\SeoPageController;
 use App\Http\Controllers\SeoAuditController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,36 +23,8 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
-
-    $totalPages = \App\Models\SeoPage::count();
-
-    $totalAudits = \App\Models\SeoAuditLog::count();
-
-    $averageScore = round(
-        \App\Models\SeoPage::whereNotNull('performance_score')
-            ->avg('performance_score') ?? 0,
-        1
-    );
-
-    $bestScore = \App\Models\SeoPage::max('performance_score') ?? 0;
-
-    $pagesWithoutAudit = \App\Models\SeoPage::whereNull('performance_score')->count();
-
-    $recentAudits = \App\Models\SeoAuditLog::with('seoPage')
-        ->oldest()
-        ->take(5)
-        ->get();
-
-    return view('dashboard', compact(
-        'totalPages',
-        'totalAudits',
-        'averageScore',
-        'bestScore',
-        'pagesWithoutAudit',
-        'recentAudits'
-    ));
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +60,12 @@ Route::get(
     '/seo-pages/{id}/history',
     [SeoAuditController::class, 'auditHistory']
 )->name('seo-pages.history');
+
+
+Route::post(
+    '/seo-pages/bulk-audit',
+    [SeoAuditController::class, 'bulkAudit']
+)->name('seo-pages.bulk-audit');
 
 /*
 |--------------------------------------------------------------------------
