@@ -228,6 +228,24 @@
 
                         </a>
 
+                        <form action="{{ route('seo-pages.bulk-audit') }}"
+                            method="POST">
+
+                            @csrf
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger btn-lg w-100"
+                                onclick="return confirm('Run SEO audit for all pages?')">
+
+                                <i class="fas fa-bolt me-2"></i>
+
+                                Run Audit For All Pages
+
+                            </button>
+
+                        </form>
+
                         <a href="{{ route('sitemap.generate') }}"
                             class="btn btn-success btn-lg">
 
@@ -578,5 +596,87 @@
             </div>
 
         </div>
+
+        <div class="row mt-4">
+
+            <div class="col-12">
+
+                <div class="card shadow-lg border-0 rounded-4">
+
+                    <div class="card-header bg-primary text-white">
+
+                        <h5 class="mb-0">
+
+                            <i class="fas fa-chart-line me-2"></i>
+
+                            SEO Score Trend
+
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <canvas id="seoChart" height="90"></canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @push('scripts')
+
+        <script>
+            const ctx = document.getElementById('seoChart');
+
+            new Chart(ctx, {
+
+                type: 'line',
+
+                data: {
+
+                    labels: @json($chartLabels),
+
+                    datasets: [{
+
+                        label: 'SEO Score',
+
+                        data: @json($chartScores),
+
+                        borderWidth: 3,
+
+                        tension: 0.4,
+
+                        fill: false
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 100
+
+                        }
+
+                    }
+
+                }
+
+            });
+        </script>
+
+        @endpush
 
         @endsection

@@ -12,7 +12,16 @@ class SeoAuditController extends Controller
     public function auditPage(Request $request, $id)
     {
         $seoPage = SeoPage::findOrFail($id);
-        
+
+        $this->performAudit($seoPage);
+
+        return redirect()
+            ->route('seo-pages.show', $seoPage)
+            ->with('success', 'SEO audit completed successfully.');
+    }
+
+    private function performAudit(SeoPage $seoPage)
+    {
         // Run multiple audits
         $audits = [
             'meta_tags' => $this->auditMetaTags($seoPage),
@@ -24,7 +33,7 @@ class SeoAuditController extends Controller
         $overallScore = collect($audits)->avg('score');
 
         // Save audit log
-        $auditLog = SeoAuditLog::create([
+        SeoAuditLog::create([
             'seo_page_id' => $seoPage->id,
             'audit_type' => 'full_audit',
             'audit_data' => $audits,
@@ -32,14 +41,11 @@ class SeoAuditController extends Controller
             'recommendations' => $this->generateRecommendations($audits),
         ]);
 
-        // Update page with latest data
+        // Update page
         $seoPage->update([
             'performance_score' => $overallScore,
             'word_count' => $audits['content_analysis']['word_count'] ?? 0,
         ]);
-
-        return redirect()->route('seo-pages.show', $seoPage)
-            ->with('success', 'SEO audit completed successfully.');
     }
 
     private function auditMetaTags(SeoPage $page): array
@@ -128,7 +134,7 @@ class SeoAuditController extends Controller
     private function generateRecommendations(array $audits): string
     {
         $recommendations = [];
-        
+
         foreach ($audits as $audit) {
             if (!empty($audit['issues'])) {
                 $recommendations = array_merge($recommendations, $audit['issues']);
@@ -142,5 +148,29 @@ class SeoAuditController extends Controller
     {
         $seoPage = SeoPage::with('auditLogs')->findOrFail($id);
         return view('seo-pages.history', compact('seoPage'));
+    }
+
+    public function bulkAudit()
+    {
+        $pages = SeoPage::all();
+
+        if ($pages->isEmpty()) {
+
+            return redirect()
+                ->back()
+                ->with('error', 'No SEO pages found.');
+        }
+
+        foreach ($pages as $page) {
+
+            $this->performAudit($page);
+        }
+
+        return redirect()
+            ->route('dashboard')
+            ->with(
+                'success',
+                $pages->count() . ' SEO pages audited successfully.'
+            );
     }
 }
