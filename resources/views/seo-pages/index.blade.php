@@ -6,15 +6,6 @@
 
 <div class="container-fluid">
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show">
-        {{ session('success') }}
-
-        <button class="btn-close"
-            data-bs-dismiss="alert"></button>
-    </div>
-    @endif
-
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <h2>
@@ -22,7 +13,25 @@
             SEO Pages
         </h2>
 
-        <div>
+        <div class="d-flex gap-2">
+
+            <form action="{{ route('seo-pages.bulk-audit') }}"
+                method="POST">
+
+                @csrf
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                    onclick="return confirm('Run SEO audit for every page?')">
+
+                    <i class="fas fa-bolt"></i>
+
+                    Bulk Audit
+
+                </button>
+
+            </form>
 
             <a href="{{ route('seo-pages.export') }}"
                 class="btn btn-success">
@@ -373,7 +382,7 @@
             </div>
 
             <div class="mt-4 d-flex justify-content-center">
-                
+
                 @if ($pages->lastPage() > 1)
                 <nav>
                     <ul class="pagination justify-content-center">
