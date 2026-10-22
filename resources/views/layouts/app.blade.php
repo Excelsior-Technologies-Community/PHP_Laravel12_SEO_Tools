@@ -69,6 +69,21 @@
         </div>
         @endif
 
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center mb-1">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Please resolve the following errors:</strong>
+            </div>
+            <ul class="mb-0 ps-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
         @yield('content')
     </div>
 
