@@ -11,8 +11,20 @@
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>https://techblog.com/laravel-12-seo-guide</loc>
-    <lastmod>2026-08-03T11:36:28+00:00</lastmod>
+    <loc>https://example.com/ultimate-laravel-12-seo-guide</loc>
+    <lastmod>2026-10-22T11:44:01+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>https://example.com/pricing-plans</loc>
+    <lastmod>2026-10-22T11:10:20+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+            </url>
+    <url>
+    <loc>https://example.com/about-us-team</loc>
+    <lastmod>2026-10-22T11:10:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
             </url>
